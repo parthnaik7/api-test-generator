@@ -1,0 +1,56 @@
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+
+# ─── Virtual Environments ────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+env.bak/
+venv.bak/
+ENV/
+
+# ─── Testing & Coverage ──────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+*.cover
+
+# ─── Linters / Formatters ────────────────────────────────────────────────────
+.ruff_cache/
+.mypy_cache/
+
+# ─── Node (backend RAML conversion tool) ─────────────────────────────────────
+backend/node_modules/
+backend/package-lock.json
+
+# ─── Environment / Secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+*.env
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── OS Artifacts ────────────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# ─── IDE / Editor ────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo

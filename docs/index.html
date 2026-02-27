@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="API Test Case Generator - Automatically generate comprehensive API test cases from your OpenAPI Specification. Covers positive, negative, boundary, security, data-type, and combinatorial scenarios." />
+  <meta name="theme-color" content="#0f1117" />
+  <title>API TestGen - API Test Case Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     SKIP NAV (Accessibility)
+══════════════════════════════════════════════════════════════════════ -->
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="logo" aria-label="API TestGen Home">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">API<strong>TestGen</strong></span>
+      </div>
+      <nav class="header-nav" aria-label="Primary navigation">
+        <a href="#upload-section" class="nav-link">Generate Tests</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="https://github.com/your-repo/api-test-generator" target="_blank" rel="noopener noreferrer"
+          class="nav-link nav-link--github" aria-label="View source on GitHub">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+          </svg>
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════════════ -->
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="hero-glow hero-glow--1"></div>
+        <div class="hero-glow hero-glow--2"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge" aria-label="No AI required badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          No AI · Pure Logic · Deterministic
+        </div>
+        <h1 id="hero-heading" class="hero-title">
+          Exhaustive API Tests<br />
+          <span class="hero-title--accent">from your OAS Spec</span>
+        </h1>
+        <p class="hero-subtitle">
+          Upload an OpenAPI Specification and instantly generate hundreds of test cases - positive, negative, boundary,
+          security, data-type, and combinatorial - with full payloads and headers.
+        </p>
+        <div class="hero-stats" aria-label="Feature highlights">
+          <div class="stat">
+            <span class="stat-num" aria-label="6 test categories">6</span>
+            <span class="stat-label">Test Categories</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat">
+            <span class="stat-num" aria-label="11+ security scenarios">11+</span>
+            <span class="stat-label">Auth Scenarios</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat">
+            <span class="stat-num" aria-label="Zero AI">0</span>
+            <span class="stat-label">AI Dependency</span>
+          </div>
+        </div>
+        <a href="#upload-section" class="btn btn--primary hero-cta" aria-label="Go to file upload section">
+          Generate Test Cases
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+        </a>
+      </div>
+      <div class="hero-code-preview" aria-hidden="true">
+        <div class="code-preview-header">
+          <span class="dot dot--red"></span>
+          <span class="dot dot--yellow"></span>
+          <span class="dot dot--green"></span>
+          <span class="code-preview-title">Generated Test Case</span>
+        </div>
+        <pre class="code-preview-body"><code><span class="tk-key">"id"</span>: <span class="tk-str">"POST_users_0012"</span>,
+<span class="tk-key">"name"</span>: <span class="tk-str">"TC_POST_users_SECURITY_MISSING_AUTH_HEADER"</span>,
+<span class="tk-key">"category"</span>: <span class="tk-str">"security"</span>,
+<span class="tk-key">"method"</span>: <span class="tk-str">"POST"</span>,
+<span class="tk-key">"expected_status"</span>: <span class="tk-num">401</span>,
+<span class="tk-key">"headers"</span>: {
+  <span class="tk-key">"Content-Type"</span>: <span class="tk-str">"application/json"</span>
+},
+<span class="tk-key">"body"</span>: {
+  <span class="tk-key">"email"</span>: <span class="tk-str">"valid@example.com"</span>,
+  <span class="tk-key">"age"</span>: <span class="tk-num">25</span>
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+       UPLOAD SECTION
+  ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="upload-section" id="upload-section" aria-labelledby="upload-heading">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2 id="upload-heading" class="section-title">Upload Your Spec</h2>
+          <p class="section-subtitle">Supports OpenAPI 3.x, Swagger 2.0, and RAML (JSON, YAML, or RAML).</p>
+        </div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="drop-zone" role="region" aria-label="File upload drop zone"
+          aria-describedby="drop-zone-instructions" tabindex="0" aria-dropeffect="copy">
+          <input type="file" id="file-input" accept=".json,.yaml,.yml,.raml" class="visually-hidden"
+            aria-label="Select API spec file" />
+          <div class="drop-zone-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          </div>
+          <div class="drop-zone-text">
+            <span class="drop-zone-primary" id="drop-zone-instructions">Drag & drop your API spec here</span>
+            <span class="drop-zone-secondary">or <button class="link-btn" id="browse-btn" type="button">browse
+                files</button></span>
+            <span class="drop-zone-formats">.json · .yaml · .yml · .raml &nbsp;·&nbsp; max 10 MB</span>
+          </div>
+          <div class="drop-zone-file-info" id="file-info" hidden aria-live="polite">
+            <span class="file-icon" aria-hidden="true">📄</span>
+            <span class="file-name" id="file-name-display"></span>
+            <span class="file-size" id="file-size-display"></span>
+            <button class="icon-btn" id="remove-file-btn" aria-label="Remove selected file" type="button">×</button>
+          </div>
+        </div>
+
+        <!-- Validation result -->
+        <div id="validation-result" class="validation-result" hidden aria-live="polite" role="status"></div>
+
+        <!-- Generate button -->
+        <div class="upload-actions">
+          <button class="btn btn--primary btn--lg" id="generate-btn" disabled
+            aria-label="Generate test cases from uploaded spec" aria-disabled="true">
+            <span id="generate-btn-text">Generate Test Cases</span>
+            <span id="generate-btn-spinner" class="btn-spinner" hidden aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+       RESULTS SECTION
+  ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="results-section" id="results-section" hidden aria-labelledby="results-heading">
+      <div class="section-inner">
+
+        <!-- Summary bar -->
+        <div class="results-header">
+          <div>
+            <h2 id="results-heading" class="section-title">
+              Generated Test Cases
+              <span class="results-badge" id="results-count" aria-label="total count">0</span>
+            </h2>
+            <p class="section-subtitle" id="results-subtitle"></p>
+          </div>
+          <div class="results-actions">
+            <button class="btn btn--ghost btn--sm" id="copy-json-btn" aria-label="Copy all test cases as JSON">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              Copy JSON
+            </button>
+            <button class="btn btn--ghost btn--sm" id="download-json-btn" aria-label="Download test cases as JSON file">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download JSON
+            </button>
+            <button class="btn btn--ghost btn--sm" id="download-yaml-btn" aria-label="Download test cases as YAML file">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download YAML
+            </button>
+            <button class="btn btn--ghost btn--sm" id="download-csv-btn" aria-label="Download test cases as CSV file">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              Download CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="summary-grid" id="summary-grid" role="list" aria-label="Test case summary by category"></div>
+
+        <!-- Filters & Search -->
+        <div class="filter-bar" role="search" aria-label="Filter test cases">
+          <div class="search-wrapper">
+            <svg class="search-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="search" class="search-input" id="search-input"
+              placeholder="Search test cases by name, method, path…" aria-label="Search test cases"
+              aria-controls="test-cases-table" />
+          </div>
+          <div class="filter-chips" id="filter-chips" role="group" aria-label="Filter by category"></div>
+          <div class="filter-right">
+            <label for="method-filter" class="visually-hidden">Filter by HTTP method</label>
+            <select class="filter-select" id="method-filter" aria-label="Filter by HTTP method">
+              <option value="">All Methods</option>
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>PATCH</option>
+              <option>DELETE</option>
+            </select>
+            <label for="status-filter" class="visually-hidden">Filter by expected status</label>
+            <select class="filter-select" id="status-filter" aria-label="Filter by expected status">
+              <option value="">All Statuses</option>
+              <option>200</option>
+              <option>201</option>
+              <option>400</option>
+              <option>401</option>
+              <option>403</option>
+              <option>404</option>
+              <option>405</option>
+              <option>415</option>
+              <option>422</option>
+              <option>500</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Test case list -->
+        <div class="test-cases-list" id="test-cases-table" role="list" aria-label="Test cases" aria-live="polite"></div>
+
+        <div class="pagination-bar" id="pagination-bar" aria-label="Pagination"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+       HOW IT WORKS
+  ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="how-section" id="how-it-works" aria-labelledby="how-heading">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2 id="how-heading" class="section-title">How It Works</h2>
+          <p class="section-subtitle">Six categories of tests, generated deterministically from your spec.</p>
+        </div>
+        <div class="categories-grid" role="list">
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-positive">
+            <div class="category-icon category-icon--positive" aria-hidden="true">✓</div>
+            <h3 id="cat-positive" class="category-name">Positive</h3>
+            <p class="category-desc">Happy-path tests with all valid inputs and expected success responses.</p>
+          </article>
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-negative">
+            <div class="category-icon category-icon--negative" aria-hidden="true">✗</div>
+            <h3 id="cat-negative" class="category-name">Negative</h3>
+            <p class="category-desc">Missing fields, null bodies, wrong content-types, wrong HTTP methods.</p>
+          </article>
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-boundary">
+            <div class="category-icon category-icon--boundary" aria-hidden="true">◈</div>
+            <h3 id="cat-boundary" class="category-name">Boundary</h3>
+            <p class="category-desc">Min/max values, edge string lengths, empty arrays, overflow integers, special
+              chars.</p>
+          </article>
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-security">
+            <div class="category-icon category-icon--security" aria-hidden="true">⚿</div>
+            <h3 id="cat-security" class="category-name">Security</h3>
+            <p class="category-desc">Missing tokens, expired JWTs, malformed Bearer/Basic/API-Key, SQL injection in
+              headers.</p>
+          </article>
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-datatype">
+            <div class="category-icon category-icon--datatype" aria-hidden="true">⟨⟩</div>
+            <h3 id="cat-datatype" class="category-name">Data Type</h3>
+            <p class="category-desc">String sent as int, boolean as string, array instead of object - all type
+              mismatches.</p>
+          </article>
+
+          <article class="category-card" role="listitem" aria-labelledby="cat-combinatorial">
+            <div class="category-icon category-icon--combinatorial" aria-hidden="true">⊞</div>
+            <h3 id="cat-combinatorial" class="category-name">Combinatorial</h3>
+            <p class="category-desc">Pairwise combinations of optional parameters to expose interaction bugs.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     SETTINGS PANEL (Backend URL - advanced / not the main thing)
+══════════════════════════════════════════════════════════════════════ -->
+  <div class="settings-panel" id="settings-panel">
+    <button class="settings-toggle" id="settings-toggle" aria-expanded="false" aria-controls="settings-body">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
+      </svg>
+      Backend Settings
+      <svg class="settings-chevron" aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
+    <div class="settings-body" id="settings-body" hidden>
+      <div class="config-bar" role="group" aria-label="API connection settings">
+        <label class="config-label" for="api-url-input">Backend API URL</label>
+        <div class="config-input-group">
+          <input id="api-url-input" type="url" class="config-input" value="http://localhost:8000"
+            placeholder="http://localhost:8000" aria-describedby="api-url-help" />
+          <button class="btn btn--ghost btn--sm" id="test-connection-btn" aria-label="Test API connection">
+            <span class="btn-indicator" id="conn-indicator" aria-hidden="true"></span>
+            Test Connection
+          </button>
+        </div>
+        <p id="api-url-help" class="config-help">Running locally? Start the backend:
+          <code>uvicorn app.main:app --reload</code>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-copy">© 2026 API TestGen · Open Source · MIT License</p>
+      <p class="footer-links">
+        <a href="https://spec.openapis.org/oas/latest.html" target="_blank" rel="noopener noreferrer">OAS Docs</a>
+        ·
+        <a href="https://github.com/your-repo/api-test-generator" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+     TOAST
+══════════════════════════════════════════════════════════════════════ -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          PYTHONPATH=backend pytest tests/test_generator.py -v --tb=short
+
+      - name: Start FastAPI for integration tests
+        run: |
+          cd backend
+          uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+          echo "Waiting for server to start..."
+          for i in $(seq 1 10); do
+            curl -sf http://localhost:8000/health && break
+            sleep 1
+          done
+          echo "✓ Server is up"
+
+      - name: Run integration tests
+        run: |
+          PYTHONPATH=backend pytest tests/test_api_integration.py -v --tb=short
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install ruff
+        run: pip install ruff
+      - name: Run ruff
+        run: ruff check backend/app/ --ignore E501
