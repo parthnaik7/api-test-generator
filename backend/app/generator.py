@@ -50,6 +50,7 @@ class TestCase:
     body: Any = None
     expected_status: int = 200
     expected_behavior: str = ""
+    response_schema: dict | None = None
     tags: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -66,6 +67,7 @@ class TestCase:
             "body": self.body,
             "expected_status": self.expected_status,
             "expected_behavior": self.expected_behavior,
+            "response_schema": self.response_schema,
             "tags": self.tags,
         }
 
@@ -499,6 +501,7 @@ class TestCaseGenerator:
         parameters = self._collect_parameters(operation)
         request_body_schema = self._extract_request_body_schema(operation)
         success_code = self._primary_success_code(operation)
+        response_schema = self._extract_response_schema(operation, success_code)
         op_id = operation.get("operationId", self._path_to_id(path, method))
         tags = operation.get("tags", [])
 
@@ -525,15 +528,33 @@ class TestCaseGenerator:
             body=valid_body,
             expected_status=success_code,
             expected_behavior=f"Should return HTTP {success_code} with a valid response body",
+            response_schema=response_schema,
             tags=tags,
         ))
+
+        # 1.5 Response Schema Validation (Explicit)
+        if response_schema:
+            cases.append(self._make_case(
+                op_id=op_id, suffix="response_schema_validation",
+                description=f"Verify {method} {path} returns {success_code} and response body matches the defined schema",
+                category=TestCategory.POSITIVE,
+                method=method, path=path,
+                path_params=valid_path_params,
+                query_params=valid_query_params,
+                headers=valid_headers,
+                body=valid_body,
+                expected_status=success_code,
+                expected_behavior=f"Should return HTTP {success_code} with response body strictly conforming to schema",
+                response_schema=response_schema,
+                tags=tags,
+            ))
 
         # 2. Auth / Security tests — 401 Unauthorized
         if security_schemes:
             for label, bad_headers in AuthHeaderGenerator.get_invalid_header_cases(security_schemes):
                 headers = {**self._content_type_header, **bad_headers}
                 cases.append(self._make_case(
-                    op_id=op_id, suffix=f"security_{label}",
+                    op_id=op_id, suffix=label,
                     description=f"Verify {method} {path} returns 401 when auth is: {label}",
                     category=TestCategory.SECURITY,
                     method=method, path=path,
@@ -550,7 +571,7 @@ class TestCaseGenerator:
             for label, forbidden_headers in AuthHeaderGenerator.get_forbidden_header_cases(security_schemes):
                 merged = {**self._content_type_header, **valid_headers, **forbidden_headers}
                 cases.append(self._make_case(
-                    op_id=op_id, suffix=f"security_forbidden_{label}",
+                    op_id=op_id, suffix=f"forbidden_{label}",
                     description=(
                         f"Verify {method} {path} returns 403 when authenticated with "
                         f"insufficient permissions: {label}"
@@ -628,7 +649,7 @@ class TestCaseGenerator:
                 else:
                     dest_q[p_name] = b_val
                 cases.append(self._make_case(
-                    op_id=op_id, suffix=f"boundary_{p_name}_{b_label}",
+                    op_id=op_id, suffix=f"{p_name}_{b_label}",
                     description=f"Boundary test for param '{p_name}': {b_label} = {repr(b_val)!r:.80}",
                     category=TestCategory.BOUNDARY,
                     method=method, path=path,
@@ -944,7 +965,7 @@ class TestCaseGenerator:
                 boundary_body[field_name] = b_val
                 exp_s = 400 if ("above" in b_label or "below" in b_label) else success_code
                 cases.append(self._make_case(
-                    op_id=op_id, suffix=f"body_boundary_{field_name}_{b_label}",
+                    op_id=op_id, suffix=f"{field_name}_{b_label}",
                     description=f"Boundary '{b_label}' for body field '{field_name}': value={repr(b_val)!r:.60}",
                     category=TestCategory.BOUNDARY,
                     method=method, path=path,
@@ -1085,6 +1106,24 @@ class TestCaseGenerator:
         json_content = content.get("application/json", {})
         schema = json_content.get("schema", {})
         return self.resolver.resolve(schema) if schema else None
+
+    def _extract_response_schema(self, operation: dict, status_code: int) -> dict | None:
+        responses = operation.get("responses", {})
+        response = responses.get(str(status_code), {})
+        
+        # OpenAPI 3.0 uses content -> application/json -> schema
+        content = response.get("content", {})
+        json_content = content.get("application/json", {})
+        schema_oas3 = json_content.get("schema")
+        if schema_oas3:
+            return self.resolver.resolve(schema_oas3)
+
+        # Swagger 2.0 uses response -> schema directly (which RAML often converts to)
+        schema_sw2 = response.get("schema")
+        if schema_sw2:
+            return self.resolver.resolve(schema_sw2)
+            
+        return None
 
     def _build_valid_params(self, parameters: list[dict], location: str) -> dict:
         result = {}

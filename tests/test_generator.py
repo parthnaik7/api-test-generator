@@ -446,6 +446,50 @@ class TestTestCaseGenerator:
         assert has_page or has_limit, (
             "Boundary tests for pagination params (page/limit) must be generated"
         )
+        
+    def test_response_schema_validation_test_exists(self):
+        """API Validation standard: test case to validate response against schema must be generated."""
+        # We need a spec that has a response schema. MINIMAL_OAS doesn't, OAS_WITH_REFS does.
+        gen = TestCaseGenerator(OAS_WITH_REFS)
+        cases = gen.generate()
+        schema_tests = [tc for tc in cases if "response_schema_validation" in tc["name"]]
+        
+        # OAS_WITH_REFS doesn't have a response schema in MINIMAL_OAS, wait, let's check OAS_WITH_REFS.
+        # Actually it doesn't either. Let's create a minimal test spec here:
+        oas_with_response_schema = {
+            "openapi": "3.0.0",
+            "info": {"title": "Res API", "version": "1.0.0"},
+            "paths": {
+                "/items": {
+                    "get": {
+                        "operationId": "getItems",
+                        "responses": {
+                            "200": {
+                                "description": "OK",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {"id": {"type": "string"}}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        gen = TestCaseGenerator(oas_with_response_schema)
+        cases = gen.generate()
+        schema_tests = [tc for tc in cases if "response_schema_validation" in tc["name"]]
+        
+        assert len(schema_tests) > 0, "Response schema validation test must be generated"
+        for tc in schema_tests:
+            assert tc["category"] == "positive"
+            assert "response_schema" in tc
+            assert isinstance(tc["response_schema"], dict)
+            assert tc["response_schema"]["type"] == "object"
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
